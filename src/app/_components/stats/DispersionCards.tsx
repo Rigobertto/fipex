@@ -16,24 +16,28 @@ export type StatItem = {
   sections: Section[];
 };
 
-type Props =
-  | {
-      /** Calcula automaticamente a partir destes valores */
-      values: number[];
-      /** Layout dos cards */
-      layout?: "vertical" | "horizontal";
-      /** Casas decimais para números */
-      precision?: number;
-      /** Se true usa população (N); se false usa amostra (n-1) — padrão: amostra */
-      population?: boolean;
-      /** Locale para formatar números (padrão pt-BR) */
-      locale?: string;
-    }
-  | {
-      /** Renderiza cards prontos */
-      stats: StatItem[];
-      layout?: "vertical" | "horizontal";
-    };
+type BaseProps = {
+  /** Layout dos cards */
+  layout?: "vertical" | "horizontal";
+};
+
+type AutoProps = BaseProps & {
+  /** Calcula automaticamente a partir destes valores */
+  values: number[];
+  /** Casas decimais para números */
+  precision?: number;
+  /** Se true usa população (N); se false usa amostra (n-1) — padrão: amostra */
+  population?: boolean;
+  /** Locale para formatar números (padrão pt-BR) */
+  locale?: string;
+};
+
+type ManualProps = BaseProps & {
+  /** Renderiza cards prontos */
+  stats: StatItem[];
+};
+
+type Props = AutoProps | ManualProps;
 
 function mean(arr: number[]) {
   return arr.reduce((a, b) => a + b, 0) / arr.length;
@@ -67,7 +71,7 @@ function buildAutoStats(
   opt?: { precision?: number; population?: boolean; locale?: string }
 ): StatItem[] {
   const precision = opt?.precision ?? 2;
-  // 🔽 Padrão agora é amostral (population = false)
+  // Padrão amostral (population = false)
   const population = opt?.population ?? false;
   const locale = opt?.locale ?? "pt-BR";
 
@@ -81,7 +85,6 @@ function buildAutoStats(
 
   const denomLabel = population ? "N" : "n - 1";
   const denomValue = population ? N : Math.max(1, N - 1);
-  // Use símbolo “s” para amostra, “σ” para população
   const sym = population ? "σ" : "s";
 
   return [
@@ -225,16 +228,16 @@ function buildAutoStats(
 }
 
 const DispersionCards: React.FC<Props> = (props) => {
-  const layout = (props as any).layout ?? "horizontal";
+  const layout: NonNullable<Props["layout"]> = props.layout ?? "horizontal";
 
   const stats: StatItem[] =
     "values" in props
       ? buildAutoStats(props.values, {
-          precision: (props as any).precision,
-          population: (props as any).population, // padrão já é amostral (false)
-          locale: (props as any).locale,
+          precision: props.precision,
+          population: props.population, // padrão já é amostral (false)
+          locale: props.locale,
         })
-      : (props as any).stats;
+      : props.stats;
 
   return (
     <Flex vertical={layout === "vertical"} style={{ width: "100%" }} gap={16}>

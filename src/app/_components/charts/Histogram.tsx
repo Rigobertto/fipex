@@ -2,44 +2,53 @@
 
 import React from "react";
 import { Histogram } from "@ant-design/plots";
+import type { HistogramConfig } from "@ant-design/plots";
 
 type Props = {
-  values: number[];         // dados numéricos crus
-  bins?: number;            // nº de intervalos (default: sqrt(n))
+  values: number[];  // dados numéricos crus
+  bins?: number;     // nº de intervalos (default: sqrt(n))
   height?: number;
   title?: string;
 };
 
+type HistogramBinDatum = {
+  range: [number, number];
+  count: number;
+};
+
 const HistogramChart: React.FC<Props> = ({ values, bins, height = 320, title }) => {
-  // se não vier nº de bins, usa sqrt(n)
-  const nBins = bins ?? Math.ceil(Math.sqrt(values.length));
+  // nº de bins padrão = sqrt(n)
+  const nBins = bins ?? Math.ceil(Math.sqrt(Math.max(values.length, 1)));
 
-  // normaliza os dados para objeto { value }
-  const data = values.map((v) => ({ value: v }));
+  // normaliza: { value }
+  const data = React.useMemo(() => values.map((v) => ({ value: v })), [values]);
 
-  const config: any = {
+  // calcula binWidth a partir do range dos dados
+  const binWidth = React.useMemo(() => {
+    if (values.length === 0) return 1; // fallback seguro
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const width = (max - min) / Math.max(nBins, 1);
+    return width > 0 ? width : 1; // evita zero quando todos valores são iguais
+  }, [values, nBins]);
+
+  const config: HistogramConfig = {
     data,
     binField: "value",
-    binNumber: nBins,
+    binNumber: nBins,   // opcional, útil para intenção
+    binWidth,           // requerido pelo tipo nessa versão
+    height,
+    columnStyle: { lineWidth: 1, stroke: "#333" },
+    interactions: [{ type: "element-highlight" }],
     tooltip: {
       fields: ["range", "count"],
-      formatter: (d: any) => ({
+      formatter: (d: HistogramBinDatum) => ({
         name: `${d.range[0]} - ${d.range[1]}`,
         value: d.count,
       }),
     },
-    height,
-    columnStyle: {
-      lineWidth: 1,
-      stroke: "#333",
-    },
-    interactions: [{ type: "element-highlight" }],
-    xAxis: {
-      title: { text: "Faixa de valores" },
-    },
-    yAxis: {
-      title: { text: "Frequência" },
-    },
+    xAxis: { title: { text: "Faixa de valores" } },
+    yAxis: { title: { text: "Frequência" } },
   };
 
   return (

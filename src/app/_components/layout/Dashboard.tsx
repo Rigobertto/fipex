@@ -18,10 +18,22 @@ const Dashboard: React.FC = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
-  const [vehicleData, setVehicleData] = React.useState<any[]>([]);
+  type ValorFipe = {
+  Valor: string;
+  Marca: string;
+  Modelo: string;
+  AnoModelo: number;
+  Combustivel: string;
+  CodigoFipe: string;
+  MesReferencia: string;
+  SiglaCombustivel?: string;
+  TipoVeiculo?: number;
+};
+
+const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
 
   // Parser seguro para "R$ 123.456,78" — memoizado
-  const parseBRL = React.useCallback((v: any) => {
+  const parseBRL = React.useCallback((v: unknown) => {
     if (typeof v === 'number') return v;
     if (typeof v !== 'string') return NaN;
     return Number(
