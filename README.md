@@ -1,6 +1,6 @@
 # 📊 FIPEX – Analisador Estatístico de Preços de Veículos (Tabela FIPE)
 
-![FIPEX Dashboard Screenshot](/docs/img/dashboard.png)
+![FIPEX Dashboard Screenshot](/public/home-choose.png)
 
 FIPEX é uma aplicação web desenvolvida em **React + Next.js** que permite analisar preços de veículos utilizando dados da **Tabela FIPE**.  
 O sistema conta com cálculo das medidas de dispersão e gráficos estatísticos (Boxplot e Histograma) para facilitar a visualização da dispersão e distribuição dos valores da amostra.
@@ -18,12 +18,12 @@ O sistema conta com cálculo das medidas de dispersão e gráficos estatísticos
 
 ## 🖼️ Screenshots
 
-### Tela de Pesquisa
-![Search Screenshot](/docs/img/search.png)
+### Medidas de Dispersão
+![Search Screenshot](/public/medidas.png)
 
 ### Boxplot e Histograma
-![Boxplot Histogram Screenshot](/docs/img/charts.png)
-
+![Boxplot Histogram Screenshot](/public/boxplot.png)
+![Boxplot Histogram Screenshot](/public/histogram.png)
 ---
 
 ## 🛠️ Tecnologias Utilizadas
