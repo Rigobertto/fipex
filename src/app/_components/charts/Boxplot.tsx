@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Box } from "@ant-design/plots";
+import type { BoxConfig } from "@ant-design/plots"; // ✅ tipo do config
 
 /** Entrada alternativa 1: valores por grupo */
 export type BoxplotGroupInput = {
@@ -104,7 +105,7 @@ function computeDataset(
 
   return [];
 }
-
+type TooltipItem<T = unknown> = { data?: T } & Record<string, unknown>;
 /* ------------------ COMPONENTE ------------------ */
 const Boxplot: React.FC<Props> = ({
   groups,
@@ -119,7 +120,8 @@ const Boxplot: React.FC<Props> = ({
     [groups, values, singleLabel]
   );
 
-  const config: any = {
+  const config: BoxConfig  = {
+    boxType: "box",
     data: dataset,
     xField: "x",
     yField: "y", // [min, q1, median, q3, max]
@@ -127,7 +129,7 @@ const Boxplot: React.FC<Props> = ({
     legend: false,
     boxStyle: { lineWidth: 1},
     tooltip: {
-      customContent: (name: string, items: any[]) => {
+      customContent: (name: string, items: TooltipItem<BoxplotPoint>[]) => {
         if (!items?.length) return "";
         const d = items[0]?.data as BoxplotPoint;
         if (!d) return "";

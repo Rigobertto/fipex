@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Divider, Typography } from "antd";
 
-const { Title, Text, Paragraph } = Typography;
+const { Title } = Typography;
 
 interface Section {
   title: string;

@@ -9,7 +9,6 @@ import DispersionCards from '../stats/DispersionCards';
 import FipeHeader from './FipeHeader';
 import FipeFooter from './FipeFooter';
 import Boxplot from '../charts/Boxplot';
-import HistogramChart from '../charts/Histogram';
 
 const { Title, Text } = Typography;
 const { Content } = Layout;
