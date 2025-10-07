@@ -172,7 +172,7 @@ const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
         brand="Analisador de Preço de Veículos • Tabela FIPE"
         version="v1.0.0"
         links={[]}
-        rightNote="Rigoberto Fernandes"
+        rightNote="Created by Rigoberto Fernandes"
       />
     </Layout>
   );
