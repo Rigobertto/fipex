@@ -1,73 +1,70 @@
 // services/fipeApi.ts
 
-// A URL base fornecida na documentação
-const API_BASE_URL = "https://parallelum.com.br/fipe/api/v1";
+const API_BASE_URL = "https://fipe.parallelum.com.br/api/v2";
 
-// Tipos para ajudar com a autocompletação e segurança de tipo
+// Tipos alinhados à FIPE API v2
 export interface Marca {
-  codigo: string;
-  nome: string;
+  code: string;
+  name: string;
 }
 
 export interface Modelo {
-  codigo: number;
-  nome: string;
+  code: string;   // pode vir string
+  name: string;
 }
 
 export interface Ano {
-    codigo: string;
-    nome: string;
+  code: string;
+  name: string;
 }
 
 export interface Valor {
-    Valor: string;
-    Marca: string;
-    Modelo: string;
-    AnoModelo: number;
-    Combustivel: string;
-    CodigoFipe: string;
-    MesReferencia: string;
-    TipoVeiculo: number;
-    SiglaCombustivel: string;
+  price: string;
+  brand: string;
+  model: string;
+  modelYear: number;
+  fuel: string;
+  codeFipe: string;
+  referenceMonth: string;
+  vehicleType: number;
+  fuelAcronym: string;
 }
 
-
-// Função genérica para fazer as requisições
+// Função genérica
 async function fetchFipeData<T>(endpoint: string): Promise<T> {
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`);
-    
+
     if (!response.ok) {
       throw new Error(`Erro na requisição: ${response.statusText}`);
     }
-    
-    const data = await response.json();
-    return data;
 
+    return await response.json();
   } catch (error) {
     console.error("Falha ao buscar dados da FIPE:", error);
-    throw error; // Propaga o erro para quem chamou a função
+    throw error;
   }
 }
 
-// Funções específicas para cada endpoint da API
-// Por enquanto, vamos focar em carros ('/carros')
-
+// Endpoints FIPE API v2
 export const getMarcas = async (): Promise<Marca[]> => {
-  return fetchFipeData<Marca[]>('/carros/marcas');
+  return fetchFipeData<Marca[]>(`/cars/brands`);
 };
 
-export const getModelos = async (codigoMarca: string): Promise<{ modelos: Modelo[], anos: Ano[] }> => {
+export const getModelos = async (codigoMarca: string): Promise<Modelo[]> => {
   if (!codigoMarca) throw new Error("Código da marca é obrigatório");
-  return fetchFipeData<{ modelos: Modelo[], anos: Ano[] }>(`/carros/marcas/${codigoMarca}/modelos`);
+  return fetchFipeData<Modelo[]>(`/cars/brands/${codigoMarca}/models`);
 };
 
 export const getAnos = async (codigoMarca: string, codigoModelo: string): Promise<Ano[]> => {
-    if (!codigoMarca || !codigoModelo) throw new Error("Código da marca e do modelo são obrigatórios");
-    return fetchFipeData<Ano[]>(`/carros/marcas/${codigoMarca}/modelos/${codigoModelo}/anos`);
+  if (!codigoMarca || !codigoModelo) throw new Error("Código da marca e do modelo são obrigatórios");
+  return fetchFipeData<Ano[]>(`/cars/brands/${codigoMarca}/models/${codigoModelo}/years`);
 };
 
 export const getValor = async (codigoMarca: string, codigoModelo: string, codigoAno: string): Promise<Valor> => {
-    if (!codigoMarca || !codigoModelo || !codigoAno) throw new Error("Código da marca, modelo e ano são obrigatórios");
-    return fetchFipeData<Valor>(`/carros/marcas/${codigoMarca}/modelos/${codigoModelo}/anos/${codigoAno}`);
+  if (!codigoMarca || !codigoModelo || !codigoAno)
+    throw new Error("Código da marca, modelo e ano são obrigatórios");
+  return fetchFipeData<Valor>(
+    `/cars/brands/${codigoMarca}/models/${codigoModelo}/years/${codigoAno}`
+  );
 };

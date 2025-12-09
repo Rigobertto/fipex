@@ -48,18 +48,18 @@ function median(arr: number[]) {
   return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
 }
 function variance(arr: number[], pop = false) {
-  const μ = mean(arr);
+  const xbar = mean(arr);
   const denom = pop ? arr.length : Math.max(1, arr.length - 1);
-  const sum = arr.reduce((acc, x) => acc + Math.pow(x - μ, 2), 0);
+  const sum = arr.reduce((acc, x) => acc + Math.pow(x - xbar, 2), 0);
   return sum / denom;
 }
 function stddev(arr: number[], pop = false) {
   return Math.sqrt(variance(arr, pop));
 }
 function cv(arr: number[], pop = false) {
-  const μ = mean(arr);
-  const σ = stddev(arr, pop);
-  return μ === 0 ? 0 : (σ / μ) * 100;
+  const xbar = mean(arr);
+  const s = stddev(arr, pop);
+  return xbar === 0 ? 0 : (s / xbar) * 100;
 }
 
 function formatNumber(n: number, locale = "pt-BR", maximumFractionDigits = 2) {
@@ -71,17 +71,19 @@ function buildAutoStats(
   opt?: { precision?: number; population?: boolean; locale?: string }
 ): StatItem[] {
   const precision = opt?.precision ?? 2;
-  // Padrão amostral (population = false)
-  const population = opt?.population ?? false;
+  const population = opt?.population ?? false; // padrão amostral
   const locale = opt?.locale ?? "pt-BR";
 
-  const μ = mean(values);
+  const xbar = mean(values);
   const med = median(values);
-  const σ2 = variance(values, population);
-  const σ = Math.sqrt(σ2);
+  const s2 = variance(values, population);
+  const s = Math.sqrt(s2);
   const CV = cv(values, population);
   const N = values.length;
-  const sumSq = values.reduce((acc, x) => acc + Math.pow(x - μ, 2), 0);
+
+  const sumSq = values.reduce((acc, x) => acc + Math.pow(x - xbar, 2), 0);
+  const MADsum = values.reduce((acc, x) => acc + Math.abs(x - xbar), 0);
+  const MAD = MADsum / N;
 
   const denomLabel = population ? "N" : "n - 1";
   const denomValue = population ? N : Math.max(1, N - 1);
@@ -89,22 +91,24 @@ function buildAutoStats(
 
   return [
     {
-      title: `Variância (${population ? "Populacional" : "Amostral"})`,
-      value: formatNumber(σ2, locale, precision),
+      title: `Variância`,
+      value: formatNumber(s2, locale, precision),
       sections: [
-        { title: "Fórmula", content: <p>{sym}² = ∑(xi − μ)² / {denomLabel}</p> },
+        { title: "Fórmula", content: <p>{sym}² = ∑(xi − x̄)² / {denomLabel}</p> },
         {
           title: "Onde:",
           content: (
             <>
               <p>
-                μ (média) = <Text strong>{formatNumber(μ, locale, precision)}</Text>
+                x̄ = {" "}
+                <Text strong>{formatNumber(xbar, locale, precision)}</Text>
               </p>
               <p>
                 {denomLabel} = <Text strong>{denomValue}</Text>
               </p>
               <p>
-                ∑(xi − μ)² = <Text strong>{formatNumber(sumSq, locale, precision)}</Text>
+                ∑(xi − x̄)² ={" "}
+                <Text strong>{formatNumber(sumSq, locale, precision)}</Text>
               </p>
             </>
           ),
@@ -114,29 +118,32 @@ function buildAutoStats(
           content: (
             <p>
               {sym}² = {formatNumber(sumSq, locale, precision)} / {denomValue} →{" "}
-              <Text strong>{formatNumber(σ2, locale, precision)}</Text>
+              <Text strong>{formatNumber(s2, locale, precision)}</Text>
             </p>
           ),
         },
       ],
     },
+
     {
-      title: `Desvio Padrão (${population ? "Populacional" : "Amostral"})`,
-      value: formatNumber(σ, locale, precision),
+      title: `Desvio Padrão`,
+      value: formatNumber(s, locale, precision),
       sections: [
-        { title: "Fórmula", content: <p>{sym} = √( ∑(xi − μ)² / {denomLabel} )</p> },
+        { title: "Fórmula", content: <p>{sym} = √( ∑(xi − x̄)² / {denomLabel} )</p> },
         {
           title: "Onde:",
           content: (
             <>
               <p>
-                μ (média) = <Text strong>{formatNumber(μ, locale, precision)}</Text>
+                x̄ = {" "}
+                <Text strong>{formatNumber(xbar, locale, precision)}</Text>
               </p>
               <p>
                 {denomLabel} = <Text strong>{denomValue}</Text>
               </p>
               <p>
-                ∑(xi − μ)² = <Text strong>{formatNumber(sumSq, locale, precision)}</Text>
+                ∑(xi − x̄)² ={" "}
+                <Text strong>{formatNumber(sumSq, locale, precision)}</Text>
               </p>
             </>
           ),
@@ -145,80 +152,79 @@ function buildAutoStats(
           title: "Cálculo:",
           content: (
             <p>
-              {sym} = √{formatNumber(σ2, locale, precision)} ={" "}
-              <Text strong>{formatNumber(σ, locale, precision)}</Text>
+              {sym} = √{formatNumber(s2, locale, precision)} ={" "}
+              <Text strong>{formatNumber(s, locale, precision)}</Text>
             </p>
           ),
         },
       ],
     },
+
     {
-      title: "Coeficiente de Variação (CV)",
-      value: `${formatNumber(CV, locale, precision)}%`,
+      title: "Desvio Médio",
+      value: formatNumber(MAD, locale, precision),
       sections: [
-        { title: "Fórmula", content: <p>CV = ({sym} / μ) × 100%</p> },
+        {
+          title: "Fórmula",
+          content: <p>DM = ∑ |xi − x̄| / n</p>,
+        },
         {
           title: "Onde:",
           content: (
             <>
               <p>
-                {sym} (desvio padrão) = <Text strong>{formatNumber(σ, locale, precision)}</Text>
-              </p>
-              <p>
-                μ (média) = <Text strong>{formatNumber(μ, locale, precision)}</Text>
-              </p>
-            </>
-          ),
-        },
-        {
-          title: "Cálculo:",
-          content: (
-            <p>
-              CV = ({formatNumber(σ, locale, precision)} / {formatNumber(μ, locale, precision)}) × 100% ={" "}
-              <Text strong>{formatNumber(CV, locale, precision)}%</Text>
-            </p>
-          ),
-        },
-      ],
-    },
-    {
-      title: "Média",
-      value: formatNumber(μ, locale, precision),
-      sections: [
-        { title: "Fórmula", content: <p>μ = (∑xi) / n</p> },
-        {
-          title: "Onde:",
-          content: (
-            <>
-              <p>
-                ∑xi = <Text strong>{formatNumber(values.reduce((a, b) => a + b, 0), locale, precision)}</Text>
+                x̄ ={" "}
+                <Text strong>{formatNumber(xbar, locale, precision)}</Text>
               </p>
               <p>
                 n = <Text strong>{N}</Text>
               </p>
+              <p>
+                ∑ |xi − x̄| ={" "}
+                <Text strong>{formatNumber(MADsum, locale, precision)}</Text>
+              </p>
             </>
           ),
         },
         {
-          title: "Resultado:",
+          title: "Cálculo:",
           content: (
             <p>
-              μ = <Text strong>{formatNumber(μ, locale, precision)}</Text>
+              DM = {formatNumber(MADsum, locale, precision)} / {N} →{" "}
+              <Text strong>{formatNumber(MAD, locale, precision)}</Text>
             </p>
           ),
         },
       ],
     },
+
     {
-      title: "Mediana",
-      value: formatNumber(med, locale, precision),
+      title: "Coeficiente de Variação (CV)",
+      value: `${formatNumber(CV, locale, precision)}%`,
       sections: [
-        { title: "Definição", content: <p>Valor central que divide a amostra em duas partes iguais</p> },
+        { title: "Fórmula", content: <p>CV = ({sym} / x̄) × 100%</p> },
+        {
+          title: "Onde:",
+          content: (
+            <>
+              <p>
+                {sym}  ={" "}
+                <Text strong>{formatNumber(s, locale, precision)}</Text>
+              </p>
+              <p>
+                x̄ ={" "}
+                <Text strong>{formatNumber(xbar, locale, precision)}</Text>
+              </p>
+            </>
+          ),
+        },
         {
           title: "Cálculo:",
           content: (
             <p>
-              Mediana = <Text strong>{formatNumber(med, locale, precision)}</Text>
+              CV = ({formatNumber(s, locale, precision)} /{" "}
+              {formatNumber(xbar, locale, precision)}) × 100% ={" "}
+              <Text strong>{formatNumber(CV, locale, precision)}%</Text>
             </p>
           ),
         },
@@ -234,7 +240,7 @@ const DispersionCards: React.FC<Props> = (props) => {
     "values" in props
       ? buildAutoStats(props.values, {
           precision: props.precision,
-          population: props.population, // padrão já é amostral (false)
+          population: props.population, 
           locale: props.locale,
         })
       : props.stats;

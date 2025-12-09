@@ -6,6 +6,7 @@ import {
 } from 'antd';
 import VehicleSearch from '../forms/VehicleSearch';
 import DispersionCards from '../stats/DispersionCards';
+import CentralCards from '../stats/CentralCards';
 import FipeHeader from './FipeHeader';
 import FipeFooter from './FipeFooter';
 import Boxplot from '../charts/Boxplot';
@@ -19,15 +20,15 @@ const Dashboard: React.FC = () => {
   } = theme.useToken();
 
   type ValorFipe = {
-  Valor: string;
-  Marca: string;
-  Modelo: string;
-  AnoModelo: number;
-  Combustivel: string;
-  CodigoFipe: string;
-  MesReferencia: string;
-  SiglaCombustivel?: string;
-  TipoVeiculo?: number;
+  price: string;
+  brand: string;
+  model: string;
+  modelYear: number;
+  fuel: string;
+  codeFipe: string;
+  referenceMonth: string;
+  vehicleType: number;
+  fuelAcronym: string;
 };
 
 const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
@@ -47,7 +48,7 @@ const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
   const valores = React.useMemo(() => {
     if (!vehicleData?.length) return [];
     return vehicleData
-      .map(v => parseBRL(v.Valor))
+      .map(v => parseBRL(v.price))
       .filter((n) => Number.isFinite(n));
   }, [vehicleData, parseBRL]);
 
@@ -55,8 +56,8 @@ const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
   const grupos = React.useMemo(() => {
     const map = new Map<string | number, number[]>();
     for (const v of vehicleData) {
-      const ano = v.AnoModelo ?? "Sem Ano";
-      const val = parseBRL(v.Valor);
+      const ano = v.modelYear ?? "Sem Ano";
+      const val = parseBRL(v.price);
       if (!Number.isFinite(val)) continue;
       if (!map.has(ano)) map.set(ano, []);
       map.get(ano)!.push(val);
@@ -90,7 +91,7 @@ const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
           {vehicleData.length > 0 ? (
             <div style={{ margin: 20, width: '100%', borderRadius: 12, padding: 12 }}>
               <Title level={2}>
-                VEÍCULO: {vehicleData[0].Marca} - {vehicleData[0].Modelo}
+                VEÍCULO: {vehicleData[0].brand} - {vehicleData[0].model}
               </Title>
 
               <Row gutter={[16, 16]}>
@@ -104,8 +105,8 @@ const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
                         background: '#fafafa',
                       }}
                     >
-                      <p><Text strong>Ano:</Text> {v.AnoModelo}</p>
-                      <p><Text strong>Valor:</Text> {v.Valor}</p>
+                      <p><Text strong>Ano:</Text> {v.modelYear}</p>
+                      <p><Text strong>Valor:</Text> {v.price}</p>
                     </div>
                   </Col>
                 ))}
@@ -117,7 +118,21 @@ const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
             </div>
           )}
 
-          {/* MEDIDAS — só aparece após seleção/análise */}
+           {/* MEDIDAS CENTRAIS — só aparece após seleção/análise */}
+          {valores.length > 0 && (
+            <>
+              <Title level={2} style={{ margin: 20 }}>Medidas Centrais</Title>
+              <CentralCards
+                values={valores}
+                layout="horizontal"
+                precision={2}
+                population={false}
+                locale="pt-BR"
+              />
+            </>
+          )}
+
+          {/* MEDIDAS DISPERSÃO — só aparece após seleção/análise */}
           {valores.length > 0 && (
             <>
               <Title level={2} style={{ margin: 20 }}>Medidas de Dispersão</Title>

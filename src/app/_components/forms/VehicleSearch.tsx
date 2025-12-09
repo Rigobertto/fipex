@@ -4,22 +4,21 @@ import { SearchOutlined } from "@ant-design/icons";
 import { getMarcas, getModelos, getAnos, getValor, Marca, Modelo } from "@/app/(services)/fipeApi";
 
 // Tipos mínimos alinhados à FIPE
-type Ano = { codigo: string; nome: string };
+type Ano = { code: string; name: string };
 
 export interface ValorFipe {
-  Valor: string;           // ex: "R$ 45.000,00"
-  Marca: string;
-  Modelo: string;
-  AnoModelo: number;
-  Combustivel: string;
-  CodigoFipe: string;
-  MesReferencia: string;
-  SiglaCombustivel?: string;
-  TipoVeiculo?: number;
+  price: string;
+  brand: string;
+  model: string;
+  modelYear: number;
+  fuel: string;
+  codeFipe: string;
+  referenceMonth: string;
+  vehicleType: number;
+  fuelAcronym: string;
 }
 
 interface VehicleSearchProps {
-  // envia array com todos os anos + valores tipados
   onResult: (data: ValorFipe[]) => void;
 }
 
@@ -41,6 +40,7 @@ const VehicleSearch: React.FC<VehicleSearchProps> = ({ onResult }) => {
   const [loadingModelos, setLoadingModelos] = useState<boolean>(false);
   const [loadingAnalise, setLoadingAnalise] = useState<boolean>(false);
 
+  // Carregar marcas
   useEffect(() => {
     (async () => {
       try {
@@ -52,13 +52,15 @@ const VehicleSearch: React.FC<VehicleSearchProps> = ({ onResult }) => {
     })();
   }, []);
 
+  // Carregar modelos quando marca mudar
   useEffect(() => {
     if (!marcaSelecionada) return;
+
     (async () => {
       setLoadingModelos(true);
       try {
         const data = await getModelos(marcaSelecionada);
-        setModelos(data.modelos);
+        setModelos(data);
       } finally {
         setLoadingModelos(false);
       }
@@ -70,18 +72,16 @@ const VehicleSearch: React.FC<VehicleSearchProps> = ({ onResult }) => {
     if (!marcaSelecionada || !modeloSelecionado) return;
 
     setLoadingAnalise(true);
+
     try {
-      const anos = (await getAnos(marcaSelecionada, modeloSelecionado)) as Ano[];
+      const anos = await getAnos(marcaSelecionada, modeloSelecionado);
+
       const resultados = await Promise.all(
         anos.map(async (ano) => {
-          const valor = (await getValor(
-            marcaSelecionada,
-            modeloSelecionado,
-            ano.codigo
-          )) as ValorFipe;
-          return valor;
+          return await getValor(marcaSelecionada, modeloSelecionado, ano.code);
         })
       );
+
       onResult(resultados);
     } catch (error) {
       console.error("Erro ao carregar anos e valores:", error);
@@ -125,9 +125,9 @@ const VehicleSearch: React.FC<VehicleSearchProps> = ({ onResult }) => {
                 setModeloSelecionado("");
                 setModelos([]);
                 form.setFieldsValue({ modelo: undefined });
-                onResult([]); // limpa resultados anteriores
+                onResult([]);
               }}
-              options={marcas.map((m) => ({ label: m.nome, value: m.codigo }))}
+              options={marcas.map((m) => ({ label: m.name, value: m.code }))}
             />
           </Form.Item>
         </Col>
@@ -148,7 +148,7 @@ const VehicleSearch: React.FC<VehicleSearchProps> = ({ onResult }) => {
               allowClear
               optionFilterProp="label"
               onChange={(v) => setModeloSelecionado(v ?? "")}
-              options={modelos.map((m) => ({ label: m.nome, value: m.codigo }))}
+              options={modelos.map((m) => ({ label: m.name, value: m.code }))}
             />
           </Form.Item>
         </Col>
