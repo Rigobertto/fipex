@@ -36,7 +36,7 @@ O sistema conta com cálculo das medidas de dispersão e gráficos estatísticos
   - [TypeScript](https://www.typescriptlang.org/)  
 
 - **Ferramentas**:
-  - [FIPE API HTTP REST]([https://eslint.org/](https://deividfortuna.github.io/fipe/)) + [Prettier](https://prettier.io/)
+  - [FIPE API HTTP REST]([https://eslint.org/](https://deividfortuna.github.io/fipe/))
     
 ---
 
