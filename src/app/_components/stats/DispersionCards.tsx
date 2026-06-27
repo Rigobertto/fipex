@@ -72,7 +72,6 @@ function buildAutoStats(
   const locale = opt?.locale ?? "pt-BR";
 
   const xbar = mean(values);
-  const med = median(values);
   const s2 = variance(values, population);
   const s = Math.sqrt(s2);
   const CV = cv(values, population);

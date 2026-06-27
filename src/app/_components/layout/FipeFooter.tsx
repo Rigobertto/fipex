@@ -33,6 +33,7 @@ const FipeFooter: React.FC<Props> = ({
         {/* Marca */}
         <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
           {logoSrc ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
             <img src={logoSrc} alt="Logo" className="h-7" />
           ) : (
             <CarFront className="w-5 h-5 text-gray-200" />

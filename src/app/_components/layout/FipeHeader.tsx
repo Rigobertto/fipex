@@ -20,6 +20,7 @@ const FipeHeader: React.FC<Props> = ({
     <header className="flex items-center justify-between gap-3 px-4 h-16 border-b border-white/10 bg-slate-900">
       <div className="flex items-center gap-3">
         {logoSrc ? (
+          /* eslint-disable-next-line @next/next/no-img-element */
           <img
             src={logoSrc}
             alt="Logo"

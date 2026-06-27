@@ -74,15 +74,7 @@ function buildAutoStats(
 
   const μ = mean(values);
   const med = median(values);
-  const σ2 = variance(values, population);
-  const σ = Math.sqrt(σ2);
-  const CV = cv(values, population);
   const N = values.length;
-  const sumSq = values.reduce((acc, x) => acc + Math.pow(x - μ, 2), 0);
-
-  const denomLabel = population ? "N" : "n - 1";
-  const denomValue = population ? N : Math.max(1, N - 1);
-  const sym = population ? "σ" : "s";
 
   return [
     {

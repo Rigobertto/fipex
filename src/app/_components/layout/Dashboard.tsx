@@ -95,7 +95,7 @@ const Dashboard: React.FC = () => {
             </div>
           )}
 
-           {/* MEDIDAS CENTRAIS — só aparece após seleção/análise */}
+          {/* MEDIDAS CENTRAIS — só aparece após seleção/análise */}
           {valores.length > 0 && (
             <div className="mt-10">
               <h2 className="text-xl font-bold mb-6 text-slate-800">Medidas Centrais</h2>
@@ -125,12 +125,12 @@ const Dashboard: React.FC = () => {
           {/* GRÁFICOS — só aparece após seleção/análise */}
 
           <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Boxplot geral (um único grupo “Todos”) */}
+            {/* Boxplot geral (um único grupo “Todos”) */}
             {valores.length > 0 && (
               <Boxplot
-              values={valores}
-              title="Distribuição de Valores (Todos)"
-              height={340}
+                values={valores}
+                title="Distribuição de Valores (Todos)"
+                height={340}
               />
             )}
 
@@ -150,7 +150,7 @@ const Dashboard: React.FC = () => {
         brand="Analisador de Preço de Veículos • Tabela FIPE"
         version="v1.0.0"
         links={[]}
-        rightNote="Created by Rigoberto Fernandes"
+        rightNote="Criado por Rigoberto Fernandes"
       />
     </div>
   );
