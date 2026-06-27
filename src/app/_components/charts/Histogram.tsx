@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { Histogram } from "@ant-design/plots";
-import type { HistogramConfig } from "@ant-design/plots";
 
 type Props = {
   values: number[];  // dados numéricos crus
