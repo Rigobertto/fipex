@@ -1,9 +1,6 @@
 // src/components/stats/DispersionCards.tsx
 import React from "react";
-import { Flex, Typography } from "antd";
 import StatCard from "../ui/Card";
-
-const { Text } = Typography;
 
 type Section = {
   title: string;
@@ -101,14 +98,14 @@ function buildAutoStats(
             <>
               <p>
                 x̄ = {" "}
-                <Text strong>{formatNumber(xbar, locale, precision)}</Text>
+                <span className="font-semibold">{formatNumber(xbar, locale, precision)}</span>
               </p>
               <p>
-                {denomLabel} = <Text strong>{denomValue}</Text>
+                {denomLabel} = <span className="font-semibold">{denomValue}</span>
               </p>
               <p>
                 ∑(xi − x̄)² ={" "}
-                <Text strong>{formatNumber(sumSq, locale, precision)}</Text>
+                <span className="font-semibold">{formatNumber(sumSq, locale, precision)}</span>
               </p>
             </>
           ),
@@ -118,7 +115,7 @@ function buildAutoStats(
           content: (
             <p>
               {sym}² = {formatNumber(sumSq, locale, precision)} / {denomValue} →{" "}
-              <Text strong>{formatNumber(s2, locale, precision)}</Text>
+              <span className="font-semibold">{formatNumber(s2, locale, precision)}</span>
             </p>
           ),
         },
@@ -136,14 +133,14 @@ function buildAutoStats(
             <>
               <p>
                 x̄ = {" "}
-                <Text strong>{formatNumber(xbar, locale, precision)}</Text>
+                <span className="font-semibold">{formatNumber(xbar, locale, precision)}</span>
               </p>
               <p>
-                {denomLabel} = <Text strong>{denomValue}</Text>
+                {denomLabel} = <span className="font-semibold">{denomValue}</span>
               </p>
               <p>
                 ∑(xi − x̄)² ={" "}
-                <Text strong>{formatNumber(sumSq, locale, precision)}</Text>
+                <span className="font-semibold">{formatNumber(sumSq, locale, precision)}</span>
               </p>
             </>
           ),
@@ -153,7 +150,7 @@ function buildAutoStats(
           content: (
             <p>
               {sym} = √{formatNumber(s2, locale, precision)} ={" "}
-              <Text strong>{formatNumber(s, locale, precision)}</Text>
+              <span className="font-semibold">{formatNumber(s, locale, precision)}</span>
             </p>
           ),
         },
@@ -174,14 +171,14 @@ function buildAutoStats(
             <>
               <p>
                 x̄ ={" "}
-                <Text strong>{formatNumber(xbar, locale, precision)}</Text>
+                <span className="font-semibold">{formatNumber(xbar, locale, precision)}</span>
               </p>
               <p>
-                n = <Text strong>{N}</Text>
+                n = <span className="font-semibold">{N}</span>
               </p>
               <p>
                 ∑ |xi − x̄| ={" "}
-                <Text strong>{formatNumber(MADsum, locale, precision)}</Text>
+                <span className="font-semibold">{formatNumber(MADsum, locale, precision)}</span>
               </p>
             </>
           ),
@@ -191,7 +188,7 @@ function buildAutoStats(
           content: (
             <p>
               DM = {formatNumber(MADsum, locale, precision)} / {N} →{" "}
-              <Text strong>{formatNumber(MAD, locale, precision)}</Text>
+              <span className="font-semibold">{formatNumber(MAD, locale, precision)}</span>
             </p>
           ),
         },
@@ -209,11 +206,11 @@ function buildAutoStats(
             <>
               <p>
                 {sym}  ={" "}
-                <Text strong>{formatNumber(s, locale, precision)}</Text>
+                <span className="font-semibold">{formatNumber(s, locale, precision)}</span>
               </p>
               <p>
                 x̄ ={" "}
-                <Text strong>{formatNumber(xbar, locale, precision)}</Text>
+                <span className="font-semibold">{formatNumber(xbar, locale, precision)}</span>
               </p>
             </>
           ),
@@ -224,7 +221,7 @@ function buildAutoStats(
             <p>
               CV = ({formatNumber(s, locale, precision)} /{" "}
               {formatNumber(xbar, locale, precision)}) × 100% ={" "}
-              <Text strong>{formatNumber(CV, locale, precision)}%</Text>
+              <span className="font-semibold">{formatNumber(CV, locale, precision)}%</span>
             </p>
           ),
         },
@@ -246,11 +243,13 @@ const DispersionCards: React.FC<Props> = (props) => {
       : props.stats;
 
   return (
-    <Flex vertical={layout === "vertical"} style={{ width: "100%" }} gap={16}>
+    <div className={`flex w-full gap-4 flex-wrap ${layout === "vertical" ? "flex-col" : "flex-col md:flex-row"}`}>
       {stats.map((s) => (
-        <StatCard key={s.title} title={s.title} value={s.value} sections={s.sections} />
+        <div key={s.title} className="flex-1 min-w-[250px]">
+          <StatCard title={s.title} value={s.value} sections={s.sections} />
+        </div>
       ))}
-    </Flex>
+    </div>
   );
 };
 

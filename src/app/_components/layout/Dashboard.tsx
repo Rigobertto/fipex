@@ -1,37 +1,28 @@
 "use client";
 
 import React from 'react';
-import {
-  Breadcrumb, Col, Layout, Row, theme, Typography
-} from 'antd';
 import VehicleSearch from '../forms/VehicleSearch';
 import DispersionCards from '../stats/DispersionCards';
 import CentralCards from '../stats/CentralCards';
 import FipeHeader from './FipeHeader';
 import FipeFooter from './FipeFooter';
 import Boxplot from '../charts/Boxplot';
-
-const { Title, Text } = Typography;
-const { Content } = Layout;
+import { YearBarChart } from '../charts/YearBarChart';
 
 const Dashboard: React.FC = () => {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
   type ValorFipe = {
-  price: string;
-  brand: string;
-  model: string;
-  modelYear: number;
-  fuel: string;
-  codeFipe: string;
-  referenceMonth: string;
-  vehicleType: number;
-  fuelAcronym: string;
-};
+    price: string;
+    brand: string;
+    model: string;
+    modelYear: number;
+    fuel: string;
+    codeFipe: string;
+    referenceMonth: string;
+    vehicleType: number;
+    fuelAcronym: string;
+  };
 
-const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
+  const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
 
   // Parser seguro para "R$ 123.456,78" — memoizado
   const parseBRL = React.useCallback((v: unknown) => {
@@ -69,59 +60,45 @@ const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
   }, [vehicleData, parseBRL]);
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <div className="min-h-screen flex flex-col bg-slate-50">
       <FipeHeader logoSrc="../../../logo.svg" onLogoClick={() => console.log("home")} />
 
-      <Content style={{ padding: '0 48px' }}>
-        <Breadcrumb style={{ margin: '16px 0' }} />
-        <div
-          style={{
-            background: colorBgContainer,
-            minHeight: 280,
-            padding: 24,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          <Title level={2}>Selecione Marca e Modelo</Title>
+      <main className="flex-1 px-4 sm:px-8 md:px-12 py-8">
+        <div className="bg-white min-h-[280px] p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100">
+          <h2 className="text-2xl font-bold mb-6 text-slate-800">Selecione Marca e Modelo</h2>
 
           {/* Pesquisa */}
           <VehicleSearch onResult={setVehicleData} />
 
           {/* DADOS — só aparece após seleção/análise */}
           {vehicleData.length > 0 ? (
-            <div style={{ margin: 20, width: '100%', borderRadius: 12, padding: 12 }}>
-              <Title level={2}>
+            <div className="mt-8 mb-6 w-full rounded-xl border border-slate-200 bg-slate-50 p-6">
+              <h2 className="text-xl font-bold mb-6 text-slate-800 uppercase">
                 VEÍCULO: {vehicleData[0].brand} - {vehicleData[0].model}
-              </Title>
+              </h2>
 
-              <Row gutter={[16, 16]}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                 {vehicleData.map((v, index) => (
-                  <Col key={index} xs={24} sm={12} md={8} lg={6} xl={4}>
-                    <div
-                      style={{
-                        border: '1px solid #d9d9d9',
-                        borderRadius: 8,
-                        padding: 12,
-                        background: '#fafafa',
-                      }}
-                    >
-                      <p><Text strong>Ano:</Text> {v.modelYear}</p>
-                      <p><Text strong>Valor:</Text> {v.price}</p>
-                    </div>
-                  </Col>
+                  <div
+                    key={index}
+                    className="border border-slate-200 rounded-xl p-4 bg-white shadow-sm"
+                  >
+                    <p className="text-slate-600 mb-1"><span className="font-semibold text-slate-800">Ano:</span> {v.modelYear}</p>
+                    <p className="text-slate-600"><span className="font-semibold text-slate-800">Valor:</span> {v.price}</p>
+                  </div>
                 ))}
-              </Row>
+              </div>
             </div>
           ) : (
-            <div style={{ marginTop: 16 }}>
-              <Text type="secondary">Selecione marca e modelo e clique em <Text strong>Analisar</Text> para ver os dados.</Text>
+            <div className="mt-6">
+              <p className="text-slate-500">Selecione marca e modelo e clique em <span className="font-semibold text-slate-700">Analisar</span> para ver os dados.</p>
             </div>
           )}
 
            {/* MEDIDAS CENTRAIS — só aparece após seleção/análise */}
           {valores.length > 0 && (
-            <>
-              <Title level={2} style={{ margin: 20 }}>Medidas Centrais</Title>
+            <div className="mt-10">
+              <h2 className="text-xl font-bold mb-6 text-slate-800">Medidas Centrais</h2>
               <CentralCards
                 values={valores}
                 layout="horizontal"
@@ -129,13 +106,13 @@ const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
                 population={false}
                 locale="pt-BR"
               />
-            </>
+            </div>
           )}
 
           {/* MEDIDAS DISPERSÃO — só aparece após seleção/análise */}
           {valores.length > 0 && (
-            <>
-              <Title level={2} style={{ margin: 20 }}>Medidas de Dispersão</Title>
+            <div className="mt-10">
+              <h2 className="text-xl font-bold mb-6 text-slate-800">Medidas de Dispersão</h2>
               <DispersionCards
                 values={valores}
                 layout="horizontal"
@@ -143,11 +120,11 @@ const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
                 population={false}
                 locale="pt-BR"
               />
-            </>
+            </div>
           )}
           {/* GRÁFICOS — só aparece após seleção/análise */}
 
-          <div style={{ padding: 24, display: 'grid', gap: 24 }}>
+          <div className="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Boxplot geral (um único grupo “Todos”) */}
             {valores.length > 0 && (
               <Boxplot
@@ -157,30 +134,16 @@ const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
               />
             )}
 
-            {/* Boxplot por ano (categorias) */}
+            {/* Gráfico de barras por ano (categorias) */}
             {grupos.length > 0 && (
-              <Boxplot
-                groups={grupos}  // [{ x: ano, values: number[] }, ...]
-                title="Distribuição por Ano (FIPE)"
-                height={380}
+              <YearBarChart
+                groups={grupos}
+                title="Distribuição de Preço por Ano (FIPE)"
               />
             )}
           </div>
-
-          {/* {valores.length > 0 && (
-            <div style={{ marginTop: 24 }}>
-              <HistogramChart
-                values={valores}
-                bins={10}    // opcional: nº de classes (default = √n)
-                title="Distribuição de Frequência (Histograma)"
-                height={300}
-              />
-            </div>
-          )} */}
         </div>
-
-
-      </Content>
+      </main>
 
       <FipeFooter
         logoSrc="../../../logo.svg"
@@ -189,7 +152,7 @@ const [vehicleData, setVehicleData] = React.useState<ValorFipe[]>([]);
         links={[]}
         rightNote="Created by Rigoberto Fernandes"
       />
-    </Layout>
+    </div>
   );
 };
 

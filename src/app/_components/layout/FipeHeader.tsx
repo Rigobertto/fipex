@@ -1,9 +1,6 @@
 // src/components/layout/FipeHeader.tsx
 import React from "react";
-import { Layout, Typography } from "antd";
-import { CarOutlined } from "@ant-design/icons";
-
-const { Header } = Layout;
+import { CarFront } from "lucide-react";
 
 type Props = {
   /** Texto do título */
@@ -20,34 +17,23 @@ const FipeHeader: React.FC<Props> = ({
   onLogoClick,
 }) => {
   return (
-    <Header
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: 12,
-        paddingInline: 16,
-        borderBottom: "1px solid rgba(255,255,255,0.12)",
-      }}
-    >
-      {logoSrc ? (
-        <img
-          src={logoSrc}
-          alt="Logo"
-          style={{ height: 28, cursor: onLogoClick ? "pointer" : "default" }}
-          onClick={onLogoClick}
-        />
-      ) : (
-        <CarOutlined style={{ fontSize: 24, color: "#fff" }} />
-      )}
-
-      <Typography.Text
-        style={{ color: "#fff", fontWeight: 700, fontSize: 16 }}
-        ellipsis
-      >
-        {title}
-      </Typography.Text>
-    </Header>
+    <header className="flex items-center justify-between gap-3 px-4 h-16 border-b border-white/10 bg-slate-900">
+      <div className="flex items-center gap-3">
+        {logoSrc ? (
+          <img
+            src={logoSrc}
+            alt="Logo"
+            className={`h-7 ${onLogoClick ? "cursor-pointer" : "cursor-default"}`}
+            onClick={onLogoClick}
+          />
+        ) : (
+          <CarFront className="w-6 h-6 text-white" />
+        )}
+        <span className="text-white font-bold text-base truncate">
+          {title}
+        </span>
+      </div>
+    </header>
   );
 };
 

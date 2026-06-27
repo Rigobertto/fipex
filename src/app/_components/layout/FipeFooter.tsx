@@ -1,9 +1,7 @@
 // src/components/layout/FipeFooter.tsx
 import React from "react";
-import { Layout, Typography, Space, Row, Col, Divider } from "antd";
-import { GithubOutlined, MailOutlined, ApiOutlined } from "@ant-design/icons";
-
-const { Footer } = Layout;
+import { Github, Mail, CarFront } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
 type LinkItem = {
   key: string;
@@ -30,84 +28,73 @@ const FipeFooter: React.FC<Props> = ({
   const year = new Date().getFullYear();
 
   return (
-    <Footer
-      style={{
-        padding: "24px 48px",
-        //background: "rgba(255,255,255,0.12)",
-        //borderTop: "1px solid #f0f0f0",
-         textAlign: "center",
-        background: "#001529",                 // mesma cor do Header
-        color: "rgba(255,255,255,0.85)",       // texto claro
-        borderTop: "1px solid rgba(255,255,255,0.12)",
-      }}
-    >
-      <Row gutter={[16, 16]} align="middle">
+    <footer className="px-6 py-8 sm:px-12 bg-slate-900 text-white/85 text-center border-t border-white/10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
         {/* Marca */}
-        <Col xs={24} md={10}>
-          <Space align="center" size={12} wrap>
-            {logoSrc ? (
-              <img src={logoSrc} alt="Logo" style={{ height: 28 }} />
-            ) : (
-              <ApiOutlined style={{ fontSize: 22, color: "#f0f0f0" }} />
-            )}
-            <Typography.Text style={{ fontWeight: 600,  color: "#f0f0f0"  }}>
-              {brand}
-            </Typography.Text>
-            {version && (
-              <Typography.Text type="secondary" style={{ marginLeft: 8,  color: "#f0f0f0" }}>
-                {version}
-              </Typography.Text>
-            )}
-          </Space>
-        </Col>
+        <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
+          {logoSrc ? (
+            <img src={logoSrc} alt="Logo" className="h-7" />
+          ) : (
+            <CarFront className="w-5 h-5 text-gray-200" />
+          )}
+          <span className="font-semibold text-gray-200">
+            {brand}
+          </span>
+          {version && (
+            <span className="text-gray-400 ml-2">
+              {version}
+            </span>
+          )}
+        </div>
 
         {/* Links rápidos */}
-        <Col xs={24} md={8}>
-          {links && links.length > 0 && (
-            <Space split={<Divider type="vertical"  />} wrap>
-              {links.map((l) =>
-                l.href ? (
-                  <a key={l.key} href={l.href} target="_blank" rel="noreferrer" style={{ color: "#f0f0f0" }}>
-                    {l.label}
-                  </a>
-                ) : (
-                  <Typography.Link key={l.key} onClick={l.onClick}>
-                    {l.label}
-                  </Typography.Link>
-                )
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          {links && links.length > 0 && links.map((l, index) => (
+            <React.Fragment key={l.key}>
+              {l.href ? (
+                <a href={l.href} target="_blank" rel="noreferrer" className="text-gray-200 hover:text-white transition-colors">
+                  {l.label}
+                </a>
+              ) : (
+                <button onClick={l.onClick} className="text-gray-200 hover:text-white transition-colors cursor-pointer">
+                  {l.label}
+                </button>
               )}
-            </Space>
-          )}
-        </Col>
+              {index < links.length - 1 && (
+                <Separator orientation="vertical" className="h-4 bg-white/20" />
+              )}
+            </React.Fragment>
+          ))}
+        </div>
 
         {/* Direitos/nota */}
-        <Col xs={24} md={6} style={{ textAlign: "right" }}>
-          <Space size={10} wrap>
-            <a style={{ color: "#F15721" }}
-              href="rigo.rfp@gmail.com"
+        <div className="flex flex-col items-center md:items-end justify-center">
+          <div className="flex gap-4">
+            <a
+              href="mailto:rigo.rfp@gmail.com"
               aria-label="Contato por e-mail"
               title="Contato"
+              className="text-[#F15721] hover:text-orange-400 transition-colors"
             >
-              <MailOutlined />
+              <Mail className="w-5 h-5" />
             </a>
-            <a style={{ color: "#F15721" }}
+            <a
               href="https://github.com/rigobertto"
               target="_blank"
               rel="noreferrer"
               aria-label="GitHub"
               title="GitHub"
+              className="text-[#F15721] hover:text-orange-400 transition-colors"
             >
-              <GithubOutlined />
+              <Github className="w-5 h-5" />
             </a>
-          </Space>
-          <div style={{ marginTop: 6 }}>
-            <Typography.Text type="secondary" style={{ color: "#f0f0f0" }}> 
-              © {year} {rightNote}
-            </Typography.Text>
           </div>
-        </Col>
-      </Row>
-    </Footer>
+          <div className="mt-2 text-sm text-gray-300">
+            © {year} {rightNote}
+          </div>
+        </div>
+      </div>
+    </footer>
   );
 };
 

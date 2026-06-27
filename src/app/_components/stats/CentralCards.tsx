@@ -1,9 +1,6 @@
 // src/components/stats/DispersionCards.tsx
 import React from "react";
-import { Flex, Typography } from "antd";
 import StatCard from "../ui/Card";
-
-const { Text } = Typography;
 
 type Section = {
   title: string;
@@ -98,10 +95,10 @@ function buildAutoStats(
           content: (
             <>
               <p>
-                ∑xi = <Text strong>{formatNumber(values.reduce((a, b) => a + b, 0), locale, precision)}</Text>
+                ∑xi = <span className="font-semibold">{formatNumber(values.reduce((a, b) => a + b, 0), locale, precision)}</span>
               </p>
               <p>
-                n = <Text strong>{N}</Text>
+                n = <span className="font-semibold">{N}</span>
               </p>
             </>
           ),
@@ -110,7 +107,7 @@ function buildAutoStats(
           title: "Resultado:",
           content: (
             <p>
-              x̄ = <Text strong>{formatNumber(μ, locale, precision)}</Text>
+              x̄ = <span className="font-semibold">{formatNumber(μ, locale, precision)}</span>
             </p>
           ),
         },
@@ -125,7 +122,7 @@ function buildAutoStats(
           title: "Cálculo:",
           content: (
             <p>
-              Mediana = <Text strong>{formatNumber(med, locale, precision)}</Text>
+              Mediana = <span className="font-semibold">{formatNumber(med, locale, precision)}</span>
             </p>
           ),
         },
@@ -147,11 +144,11 @@ const DispersionCards: React.FC<Props> = (props) => {
       : props.stats;
 
   return (
-    <Flex vertical={layout === "vertical"} style={{ width: "100%" }} gap={16}>
+    <div className={`flex w-full gap-4 ${layout === "vertical" ? "flex-col" : "flex-col md:flex-row"}`}>
       {stats.map((s) => (
         <StatCard key={s.title} title={s.title} value={s.value} sections={s.sections} />
       ))}
-    </Flex>
+    </div>
   );
 };
 

@@ -1,7 +1,6 @@
 import React from "react";
-import { Card, Divider, Typography } from "antd";
-
-const { Title } = Typography;
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 interface Section {
   title: string;
@@ -22,41 +21,32 @@ const StatCard: React.FC<StatCardProps> = ({
   highlightColor = "#1677ff",
 }) => {
   return (
-    <div
-      style={{
-        width: "100%",
-        borderRadius: 12,
-        padding: 12,
-      }}
-    >
-      <Card
-        title={
-          <Title level={4} style={{ margin: 0, color: highlightColor }}>
+    <div className="w-full h-full">
+      <Card className="h-full border border-gray-200 shadow-sm rounded-xl overflow-hidden flex flex-col">
+        <CardHeader className="bg-slate-50 border-b border-gray-100 pb-4">
+          <CardTitle style={{ color: highlightColor }} className="text-lg m-0 font-bold">
             {title}
-          </Title>
-        }
-        variant="borderless"
-        style={{
-          borderRadius: 12,
-          boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-          height: "100%",
-          
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-6 flex-1 flex flex-col">
+          <h3 className="text-2xl font-bold text-center mb-6 text-slate-800">
+            {value}
+          </h3>
 
-        }}
-      >
-        <Title level={3} style={{ textAlign: "center", marginBottom: 16 }}>
-          {value}
-        </Title>
-
-        {sections.map((section, index) => (
-          <React.Fragment key={index}>
-            <Divider />
-            <section>
-              <Title level={5}>{section.title}</Title>
-              {section.content}
-            </section>
-          </React.Fragment>
-        ))}
+          <div className="flex-1 flex flex-col gap-4">
+            {sections.map((section, index) => (
+              <React.Fragment key={index}>
+                {index > 0 && <Separator />}
+                <section>
+                  <h4 className="font-semibold text-sm mb-2 text-slate-700">{section.title}</h4>
+                  <div className="text-sm text-slate-600">
+                    {section.content}
+                  </div>
+                </section>
+              </React.Fragment>
+            ))}
+          </div>
+        </CardContent>
       </Card>
     </div>
   );
