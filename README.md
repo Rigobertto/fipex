@@ -50,7 +50,7 @@ O sistema conta com cálculo das medidas de dispersão e gráficos estatísticos
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/seu-usuario/fipex.git
+git clone https://github.com/rigobertto/fipex.git
 cd fipex
 
 # 2. Instale as dependências
