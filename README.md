@@ -1,9 +1,9 @@
 # 📊 FIPEX – Analisador Estatístico de Preços de Veículos (Tabela FIPE)
 
-![FIPEX Dashboard Screenshot](/public/home-choose.png)
+<img width="1510" height="890" alt="image" src="https://github.com/user-attachments/assets/feaa9c02-c5b0-4a31-b639-5f4b0fe10c23" />
 
 FIPEX é uma aplicação web desenvolvida em **React + Next.js** que permite analisar preços de veículos utilizando dados da **Tabela FIPE**.  
-O sistema conta com cálculo das medidas de dispersão e gráficos estatísticos (Boxplot e Histograma) para facilitar a visualização da dispersão e distribuição dos valores da amostra.
+O sistema conta com cálculo das medidas centrais e dispersão e gráficos estatísticos (Boxplot e Histograma) para facilitar a visualização da dispersão e distribuição dos valores da amostra.
 
 ---
 
@@ -12,18 +12,20 @@ O sistema conta com cálculo das medidas de dispersão e gráficos estatísticos
 - 🔍 **Pesquisa por Marca e Modelo** diretamente na Tabela FIPE.  
 - 📊 **Boxplot Geral e por Ano** para análise de valores mínimos, máximos, quartis e outliers.  
 - 📈 **Histograma de Frequência** para distribuição dos preços.  
-- 🧮 **Medidas de Dispersão** (média, mediana, variância, desvio padrão, coeficiente de variação).
+- 🧮 **Medidas de Dispersão** (média, mediana, variância, desvio médio, desvio padrão e coeficiente de variação).
 
 ---
 
 ## 🖼️ Screenshots
+### Medidas Centrais
+<img width="1378" height="533" alt="image" src="https://github.com/user-attachments/assets/aa31a081-003c-49d4-95b4-3cf4f01a2c3f" />
 
 ### Medidas de Dispersão
-![Search Screenshot](/public/medidas.png)
+<img width="1380" height="597" alt="image" src="https://github.com/user-attachments/assets/03c7cd5d-bd9f-4bc6-94d2-8d958ad94f43" />
 
 ### Boxplot e Histograma
-![Boxplot Histogram Screenshot](/public/boxplot.png)
-![Boxplot Histogram Screenshot](/public/histogram.png)
+<img width="1367" height="533" alt="image" src="https://github.com/user-attachments/assets/4b37a82a-120d-4cd3-8d32-0e398e6bf906" />
+
 ---
 
 ## 🛠️ Tecnologias Utilizadas
@@ -31,8 +33,7 @@ O sistema conta com cálculo das medidas de dispersão e gráficos estatísticos
 - **Frontend**:
   - [Next.js 14](https://nextjs.org/)  
   - [React 19](https://react.dev/)  
-  - [Ant Design v5](https://ant.design/) (componentes visuais)  
-  - [@ant-design/plots](https://charts.ant.design/) (gráficos com AntV)  
+  - [Shadcn UI](https://ui.shadcn.com/) (componentes visuais)
   - [TypeScript](https://www.typescriptlang.org/)  
 
 - **Ferramentas**:
