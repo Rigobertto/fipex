@@ -1,9 +1,9 @@
 # 📊 FIPEX – Analisador Estatístico de Preços de Veículos (Tabela FIPE)
 
-<img width="1510" height="890" alt="image" src="https://github.com/user-attachments/assets/feaa9c02-c5b0-4a31-b639-5f4b0fe10c23" />
-
 FIPEX é uma aplicação web desenvolvida em **React + Next.js** que permite analisar preços de veículos utilizando dados da **Tabela FIPE**.  
-O sistema conta com cálculo das medidas centrais e dispersão e gráficos estatísticos (Boxplot e Histograma) para facilitar a visualização da dispersão e distribuição dos valores da amostra.
+O sistema conta com cálculo das medidas centrais, dispersão e gráficos estatísticos (Boxplot e Histograma) para facilitar a visualização da dispersão e distribuição dos valores da amostra.
+
+<img width="1510" height="890" alt="image" src="https://github.com/user-attachments/assets/feaa9c02-c5b0-4a31-b639-5f4b0fe10c23" />
 
 ---
 
@@ -46,7 +46,7 @@ O sistema conta com cálculo das medidas centrais e dispersão e gráficos estat
 O **FIPEX** segue uma arquitetura baseada em **Client-Side Rendering (CSR)** orquestrada pelo **Next.js 15 (App Router)**, focada na reatividade e cálculo instantâneo.
 
 ### 🌐 Consumo da API (Tabela FIPE)
-O projeto consome a [API pública da Tabela FIPE](https://deividfortuna.github.io/fipe/) desenvolvida por Deivid Fortuna. 
+O projeto consome a [API pública da Tabela FIPE](https://deividfortuna.github.io/fipe/v2) desenvolvida por Deivid Fortuna. 
 O fluxo de requisições ocorre da seguinte forma:
 1. **Busca de Marcas**: Ao carregar a página, o sistema busca todas as marcas de veículos disponíveis (`/marcas`).
 2. **Busca de Modelos**: Ao selecionar uma marca, uma nova requisição busca os modelos associados àquela marca (`/marcas/{id}/modelos`).
